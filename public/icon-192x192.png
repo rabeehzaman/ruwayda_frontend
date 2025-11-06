@@ -1,0 +1,12 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="80" fill="#000000"/>
+  <rect x="64" y="64" width="384" height="384" rx="40" fill="#ffffff"/>
+  <rect x="128" y="128" width="256" height="32" rx="16" fill="#000000"/>
+  <rect x="128" y="192" width="192" height="24" rx="12" fill="#666666"/>
+  <rect x="128" y="240" width="224" height="24" rx="12" fill="#666666"/>
+  <rect x="128" y="288" width="160" height="24" rx="12" fill="#666666"/>
+  <circle cx="384" cy="208" r="48" fill="#000000"/>
+  <rect x="360" y="200" width="48" height="16" rx="8" fill="#ffffff"/>
+  <rect x="128" y="352" width="256" height="64" rx="32" fill="#000000"/>
+  <text x="256" y="390" text-anchor="middle" fill="#ffffff" font-size="20" font-family="Arial">DASHBOARD</text>
+</svg>
