@@ -252,11 +252,14 @@ body {
 /* Arabic RTL Support */
 [dir="rtl"] {
   text-align: right;
-  font-family: var(--font-cairo), 'Cairo', 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+}
+
+[dir="rtl"] body {
+  font-family: "saudi_riyal", var(--font-cairo), 'Cairo', 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
 }
 
 [dir="rtl"] * {
-  font-family: var(--font-cairo), 'Cairo', 'Segoe UI', 'Tahoma', 'Arial', sans-serif !important;
+  font-family: "saudi_riyal", var(--font-cairo), 'Cairo', 'Segoe UI', 'Tahoma', 'Arial', sans-serif !important;
 }
 
 /* Prevent text overflow in Arabic */
