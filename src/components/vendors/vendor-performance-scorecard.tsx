@@ -18,9 +18,9 @@ import { AlertTriangle, TrendingUp, Users, CreditCard, Target } from "lucide-rea
 
 const getScoreColor = (score: number) => {
   if (score >= 90) return 'text-green-600'
-  if (score >= 75) return 'text-yellow-600'
-  if (score >= 60) return 'text-orange-600'
-  return 'text-red-600'
+  if (score >= 75) return 'text-accent'
+  if (score >= 60) return 'text-warning'
+  return 'text-destructive'
 }
 
 const getScoreBadgeVariant = (status: string) => {
@@ -280,7 +280,7 @@ export function VendorPerformanceScorecard({ className }: VendorPerformanceScore
             <div className="text-xs text-muted-foreground">Total Business Share</div>
           </div>
           <div className="text-center">
-            <div className="text-xl font-bold text-orange-600">
+            <div className="text-xl font-bold text-accent">
               {(data.reduce((sum, v) => sum + v.avg_payment_days, 0) / data.length).toFixed(1)}d
             </div>
             <div className="text-xs text-muted-foreground">Avg Payment Days (Actual)</div>
@@ -333,11 +333,11 @@ export function VendorPerformanceScorecard({ className }: VendorPerformanceScore
               <span>75-89 Good Performance</span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-orange-500 rounded"></div>
+              <div className="w-3 h-3 bg-warning rounded"></div>
               <span>60-74 Average Performance</span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="w-3 h-3 bg-red-500 rounded"></div>
+              <div className="w-3 h-3 bg-destructive rounded"></div>
               <span>{"<60 Needs Attention"}</span>
             </div>
           </div>

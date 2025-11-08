@@ -40,7 +40,7 @@ interface KPICardProps {
 function KPICard({ title, value, subtitle, icon: Icon, badge, loading }: KPICardProps) {
   if (loading) {
     return (
-      <Card className="border-l-4" style={{ borderLeftColor: '#c96442' }}>
+      <Card className="border-l-4 border-l-primary">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             <Skeleton className="h-4 w-24" />
@@ -56,16 +56,14 @@ function KPICard({ title, value, subtitle, icon: Icon, badge, loading }: KPICard
   }
 
   return (
-    <Card className="border-l-4" style={{ borderLeftColor: '#c96442' }}>
+    <Card className="border-l-4 border-l-primary">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-xs sm:text-sm font-medium">{title}</CardTitle>
-        <div style={{ color: '#c96442' }}>
-          <Icon className="h-3 w-3 sm:h-4 sm:w-4" />
-        </div>
+        <Icon className="h-3 w-3 sm:h-4 sm:w-4 text-primary" />
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <div className="text-lg sm:text-2xl font-bold" style={{ color: '#b8592f' }}>{value}</div>
+          <div className="text-lg sm:text-2xl font-bold text-primary">{value}</div>
           {badge && (
             <Badge variant={badge.variant} className="text-xs self-start sm:self-auto">
               {badge.text}

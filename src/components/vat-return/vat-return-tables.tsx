@@ -303,7 +303,7 @@ export function VATReturnTables({ dateRange, locationIds }: VATReturnTablesProps
                     {data.credit_notes.length} {data.credit_notes.length !== 1 ? 'credit notes' : 'credit note'}
                   </span>
                 </div>
-                <div className="text-2xl font-bold text-orange-700 dark:text-orange-400">
+                <div className="text-2xl font-bold text-accent dark:text-accent">
                   {formatCurrency(data.summary.total_credit_vat)}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
@@ -347,7 +347,7 @@ export function VATReturnTables({ dateRange, locationIds }: VATReturnTablesProps
                       </div>
                       <div>
                         <div className="text-muted-foreground mb-0.5">{t("vatReturn.vatAmount")}</div>
-                        <div className="font-bold text-sm text-orange-700 dark:text-orange-400">
+                        <div className="font-bold text-sm text-accent dark:text-accent">
                           {formatCurrency(cn.vat_amount)}
                         </div>
                       </div>
@@ -396,7 +396,7 @@ export function VATReturnTables({ dateRange, locationIds }: VATReturnTablesProps
                         <TableCell>{cn.customer_name}</TableCell>
                         <TableCell>{cn.branch_name || 'N/A'}</TableCell>
                         <TableCell className="text-right">{formatCurrency(cn.subtotal)}</TableCell>
-                        <TableCell className="text-right font-semibold text-orange-600">
+                        <TableCell className="text-right font-semibold text-accent">
                           {formatCurrency(cn.vat_amount)}
                         </TableCell>
                         <TableCell className="text-right font-semibold">{formatCurrency(cn.total)}</TableCell>
@@ -409,7 +409,7 @@ export function VATReturnTables({ dateRange, locationIds }: VATReturnTablesProps
                       <TableCell className="text-right">
                         {formatCurrency(data.credit_notes.reduce((sum, cn) => sum + cn.subtotal, 0))}
                       </TableCell>
-                      <TableCell className="text-right text-orange-600">
+                      <TableCell className="text-right text-accent">
                         {formatCurrency(data.summary.total_credit_vat)}
                       </TableCell>
                       <TableCell className="text-right">

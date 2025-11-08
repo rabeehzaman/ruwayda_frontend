@@ -38,10 +38,14 @@ interface ChartProps {
   branchFilter?: string
 }
 
-// Chart colors for consistent theming
+// Chart colors for consistent theming - using Soft Pop theme colors
 const COLORS = [
-  '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8',
-  '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1', '#d084d0'
+  'hsl(var(--chart-1))', // Primary purple
+  'hsl(var(--chart-2))', // Secondary teal
+  'hsl(var(--chart-3))', // Accent yellow
+  'hsl(var(--chart-4))', // Chart 4
+  'hsl(var(--chart-5))', // Chart 5
+  '#82ca9d', '#8dd1e1', '#ff7c7c', '#d084d0', '#8884d8'
 ]
 
 /**

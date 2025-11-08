@@ -127,7 +127,7 @@ export const ENTITY_TYPE_COLORS: Record<EntityType, string> = {
   transfer_fund: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
   customer_payment: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
   expense: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-  vendor_payment: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+  vendor_payment: 'bg-secondary/20 text-secondary-foreground dark:bg-secondary/30 dark:text-secondary-foreground',
   journal: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
   other_income: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300',
   deposit: 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300',

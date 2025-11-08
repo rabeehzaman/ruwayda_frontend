@@ -14,7 +14,7 @@ function Skeleton({ className, shimmerEffect = true, ...props }: SkeletonProps) 
   return (
     <div
       data-slot="skeleton"
-      className={cn("bg-accent rounded-md", animationClass, className)}
+      className={cn("bg-muted/50 rounded-md", animationClass, className)}
       {...props}
     />
   )
@@ -26,7 +26,7 @@ function SkeletonWave({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="skeleton-wave"
       className={cn(
-        "bg-accent rounded-md relative overflow-hidden",
+        "bg-muted/50 rounded-md relative overflow-hidden",
         "before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent",
         "before:animate-[shimmer_2s_linear_infinite]",
         "motion-reduce:before:animate-none",

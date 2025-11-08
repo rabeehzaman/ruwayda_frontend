@@ -161,8 +161,8 @@ export function CustomerAgingBalance({ selectedOwners = [] }: CustomerAgingBalan
         {/* Mobile View */}
         <div className="md:hidden p-3 sm:p-4 w-full max-w-full">
           {filteredData.length > 0 && (
-            <div className="p-3 sm:p-4 bg-orange-50 dark:bg-orange-950/50 border-b-2 border-orange-200 dark:border-orange-800 space-y-2 mb-4 rounded-t-md w-full">
-              <div className="font-bold text-sm text-orange-900 dark:text-orange-100">{t("pages.customers.summary_totals")}</div>
+            <div className="p-3 sm:p-4 bg-accent/10 border-b-2 border-accent/30 space-y-2 mb-4 rounded-t-md w-full">
+              <div className="font-bold text-sm text-foreground">{t("pages.customers.summary_totals")}</div>
               <div className="grid grid-cols-2 gap-3 text-xs w-full">
                 <div>
                   <div className="text-muted-foreground">{t("pages.customers.total_balance")}</div>
@@ -174,7 +174,7 @@ export function CustomerAgingBalance({ selectedOwners = [] }: CustomerAgingBalan
                 </div>
                 <div>
                   <div className="text-muted-foreground">{t("pages.customers.past_due_31_180")}:</div>
-                  <div className="font-medium text-orange-600 dark:text-orange-400 break-all">
+                  <div className="font-medium text-accent break-all">
                     {formatCurrency(totals.pastDue31_60 + totals.pastDue61_90 + totals.pastDue91_180)}
                   </div>
                 </div>
@@ -225,7 +225,7 @@ export function CustomerAgingBalance({ selectedOwners = [] }: CustomerAgingBalan
                   </div>
                   <div className="min-w-0">
                     <div className="text-muted-foreground">{t('customers.table_headers.past_due_91_180')}:</div>
-                    <div className="font-medium text-orange-600 dark:text-orange-400 break-all">{formatCurrency(customer.past_due_91_180)}</div>
+                    <div className="font-medium text-accent break-all">{formatCurrency(customer.past_due_91_180)}</div>
                   </div>
                 </div>
 
@@ -247,15 +247,15 @@ export function CustomerAgingBalance({ selectedOwners = [] }: CustomerAgingBalan
           <div className="overflow-x-auto rounded-md border border-border">
             <Table>
             <TableHeader>
-              <TableRow className="bg-orange-50 dark:bg-orange-950/70 border-b-2 border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-950/90">
-                <TableHead className="min-w-12 font-bold text-orange-900 dark:text-orange-100 py-4">S/N</TableHead>
-                <TableHead className="min-w-48 font-bold text-orange-900 dark:text-orange-100 py-4">{t("customers.table_headers.customer_name")}</TableHead>
-                <TableHead className="text-right min-w-32 font-bold text-orange-900 dark:text-orange-100 py-4">{t("pages.customers.total_balance")}</TableHead>
-                <TableHead className="text-right min-w-28 font-bold text-orange-900 dark:text-orange-100 py-4">{t("customers.table_headers.current_0_30")}</TableHead>
-                <TableHead className="text-right min-w-28 hidden lg:table-cell font-bold text-orange-900 dark:text-orange-100 py-4">{t("customers.table_headers.past_due_31_60")}</TableHead>
-                <TableHead className="text-right min-w-28 hidden lg:table-cell font-bold text-orange-900 dark:text-orange-100 py-4">{t("customers.table_headers.past_due_61_90")}</TableHead>
-                <TableHead className="text-right min-w-28 hidden lg:table-cell font-bold text-orange-900 dark:text-orange-100 py-4">{t("customers.table_headers.past_due_91_180")}</TableHead>
-                <TableHead className="text-right min-w-28 font-bold text-orange-900 dark:text-orange-100 py-4">{t("customers.table_headers.high_risk_180")}</TableHead>
+              <TableRow className="bg-muted/50 border-b-2 border-border hover:bg-muted/70">
+                <TableHead className="min-w-12 font-bold text-foreground py-4">S/N</TableHead>
+                <TableHead className="min-w-48 font-bold text-foreground py-4">{t("customers.table_headers.customer_name")}</TableHead>
+                <TableHead className="text-right min-w-32 font-bold text-foreground py-4">{t("pages.customers.total_balance")}</TableHead>
+                <TableHead className="text-right min-w-28 font-bold text-foreground py-4">{t("customers.table_headers.current_0_30")}</TableHead>
+                <TableHead className="text-right min-w-28 hidden lg:table-cell font-bold text-foreground py-4">{t("customers.table_headers.past_due_31_60")}</TableHead>
+                <TableHead className="text-right min-w-28 hidden lg:table-cell font-bold text-foreground py-4">{t("customers.table_headers.past_due_61_90")}</TableHead>
+                <TableHead className="text-right min-w-28 hidden lg:table-cell font-bold text-foreground py-4">{t("customers.table_headers.past_due_91_180")}</TableHead>
+                <TableHead className="text-right min-w-28 font-bold text-foreground py-4">{t("customers.table_headers.high_risk_180")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -287,7 +287,7 @@ export function CustomerAgingBalance({ selectedOwners = [] }: CustomerAgingBalan
                   <TableCell className="text-right hidden lg:table-cell text-foreground">
                     {formatCurrency(customer.past_due_61_90)}
                   </TableCell>
-                  <TableCell className="text-right text-orange-600 dark:text-orange-400 hidden lg:table-cell font-medium">
+                  <TableCell className="text-right text-accent hidden lg:table-cell font-medium">
                     {formatCurrency(customer.past_due_91_180)}
                   </TableCell>
                   <TableCell className="text-right text-red-600 dark:text-red-400 font-medium">
@@ -311,7 +311,7 @@ export function CustomerAgingBalance({ selectedOwners = [] }: CustomerAgingBalan
                   <TableCell className="text-right font-bold hidden lg:table-cell text-foreground">
                     {formatCurrency(totals.pastDue61_90)}
                   </TableCell>
-                  <TableCell className="text-right font-bold text-orange-600 dark:text-orange-400 hidden lg:table-cell">
+                  <TableCell className="text-right font-bold text-accent hidden lg:table-cell">
                     {formatCurrency(totals.pastDue91_180)}
                   </TableCell>
                   <TableCell className="text-right font-bold text-red-600 dark:text-red-400">

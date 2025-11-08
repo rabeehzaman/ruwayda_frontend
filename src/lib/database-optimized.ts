@@ -105,6 +105,7 @@ export interface OptimizedInvoice {
   total_quantity: number
   total_sale_price: number
   total_sale_with_vat: number
+  sale_without_vat: number  // Added: Sales WITHOUT VAT (for display options)
   total_cost: number
   total_profit: number
   profit_margin_percent: number
@@ -562,10 +563,10 @@ export async function getOptimizedProfitByInvoice(
 
     // Map the RPC response fields to match our interface
     const mappedData = paginatedData.map((item: Record<string, unknown>) => {
-      const saleWithVat = item.sale_value as number || 0
-      const taxableSales = saleWithVat / 1.15 // Remove 15% VAT to get taxable amount
+      const saleWithVat = item.sale_value as number || 0  // NOW: This is WITH VAT
+      const saleWithoutVat = item.sale_without_vat as number || 0  // NEW: Sales WITHOUT VAT
       const profit = item.profit as number || 0
-      const cost = taxableSales - profit // Cost = taxable sales - profit
+      const cost = saleWithoutVat - profit // Cost = sales without VAT - profit
 
       return {
         invoice_no: item.invoice_number || item.inv_no || item.invoice_no,
@@ -574,9 +575,10 @@ export async function getOptimizedProfitByInvoice(
         branch_name: item.branch_name,
         line_items_count: 1, // RPC doesn't return this, default to 1
         total_quantity: 1, // RPC doesn't return this
-        total_sale_price: taxableSales, // Taxable sales WITHOUT VAT
-        total_sale_with_vat: saleWithVat, // Sale value WITH VAT
-        total_cost: cost, // Cost = taxable sales - profit
+        total_sale_price: saleWithoutVat, // Sales WITHOUT VAT (correct now)
+        total_sale_with_vat: saleWithVat, // Sale value WITH VAT (matches KPI)
+        sale_without_vat: saleWithoutVat, // NEW: Added for interface compatibility
+        total_cost: cost, // Cost = sales without VAT - profit
         total_profit: profit,
         profit_margin_percent: item.margin || item.profit_margin_percent || 0,
         total_count: totalCount

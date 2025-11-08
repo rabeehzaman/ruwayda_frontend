@@ -40,9 +40,9 @@ const getRiskBadgeVariant = (riskCategory: string) => {
 }
 
 const getPriorityIcon = (priority: number) => {
-  if (priority >= 5) return <AlertTriangle className="h-4 w-4 text-red-500" />
-  if (priority >= 4) return <TrendingUp className="h-4 w-4 text-orange-500" />
-  if (priority >= 3) return <Clock className="h-4 w-4 text-yellow-500" />
+  if (priority >= 5) return <AlertTriangle className="h-4 w-4 text-destructive" />
+  if (priority >= 4) return <TrendingUp className="h-4 w-4 text-warning" />
+  if (priority >= 3) return <Clock className="h-4 w-4 text-accent" />
   return <Users className="h-4 w-4 text-blue-500" />
 }
 

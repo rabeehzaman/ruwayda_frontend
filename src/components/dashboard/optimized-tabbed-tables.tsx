@@ -220,7 +220,7 @@ export function OptimizedTabbedTables({ dateRange, locationIds }: OptimizedTabbe
       case 'Rashid S Man':
         return 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 border-purple-300 dark:border-purple-700'
       case 'MAJEED':
-        return 'bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-200 border-orange-300 dark:border-orange-700'
+        return 'bg-secondary/20 dark:bg-secondary/30 text-secondary-foreground border-secondary/40'
       default:
         return 'bg-gray-100 dark:bg-gray-900/50 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-700'
     }
@@ -407,7 +407,7 @@ export function OptimizedTabbedTables({ dateRange, locationIds }: OptimizedTabbe
           </TableCell>
           
           <TableCell className="text-right py-4">
-            <div className="font-semibold text-orange-600 dark:text-orange-400">{formatCurrencyTable(invoice.total_cost || 0)}</div>
+            <div className="font-semibold text-accent">{formatCurrencyTable(invoice.total_cost || 0)}</div>
           </TableCell>
           
           <TableCell className="text-right py-4">
@@ -519,10 +519,10 @@ export function OptimizedTabbedTables({ dateRange, locationIds }: OptimizedTabbe
                                 
                                 <TableCell className="text-right text-sm py-3">
                                   <div className="space-y-1">
-                                    <div className="font-bold text-orange-700 dark:text-orange-400">
+                                    <div className="font-bold text-accent">
                                       {formatCurrencyTable(item.cost)}
                                     </div>
-                                    <div className="text-xs bg-orange-50 dark:bg-orange-900/50 text-orange-800 dark:text-orange-200 px-2 py-1 rounded border dark:border-orange-700">
+                                    <div className="text-xs bg-accent/10 text-accent-foreground px-2 py-1 rounded border border-accent/30">
                                       ({formatCurrencyTable(item.unit_cost)}/u)
                                     </div>
                                   </div>
@@ -592,7 +592,7 @@ export function OptimizedTabbedTables({ dateRange, locationIds }: OptimizedTabbe
                             </TableCell>
                             
                             <TableCell className="text-right font-bold text-sm py-4">
-                              <div className="text-orange-700 dark:text-orange-400 text-lg">
+                              <div className="text-accent text-lg">
                                 {formatCurrencyTable(items.reduce((sum, item) => sum + item.cost, 0))}
                               </div>
                             </TableCell>
@@ -848,7 +848,7 @@ export function OptimizedTabbedTables({ dateRange, locationIds }: OptimizedTabbe
                         </div>
                         <div>
                           <div className="text-muted-foreground mb-0.5">{t("tables.headers.cost")}</div>
-                          <div className="font-semibold text-orange-700 dark:text-orange-400">{formatCurrencyTable(invoice.total_cost || 0)}</div>
+                          <div className="font-semibold text-accent">{formatCurrencyTable(invoice.total_cost || 0)}</div>
                         </div>
                         <div>
                           <div className="text-muted-foreground mb-0.5">{t("tables.headers.profit")}</div>

@@ -277,11 +277,11 @@ export function VendorAgingBalance({ locationIds }: VendorAgingBalanceProps = {}
 
   const getRiskBadgeColor = (risk: string) => {
     switch (risk) {
-      case 'Critical': return 'bg-red-500 text-white'
-      case 'High': return 'bg-orange-500 text-white'
-      case 'Medium': return 'bg-yellow-500 text-white'
+      case 'Critical': return 'bg-destructive text-destructive-foreground'
+      case 'High': return 'bg-warning text-warning-foreground'
+      case 'Medium': return 'bg-accent text-accent-foreground'
       case 'Low': return 'bg-green-500 text-white'
-      default: return 'bg-gray-500 text-white'
+      default: return 'bg-muted text-muted-foreground'
     }
   }
 
@@ -290,7 +290,7 @@ export function VendorAgingBalance({ locationIds }: VendorAgingBalanceProps = {}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5 text-orange-600" />
+            <Clock className="h-5 w-5 text-primary" />
             {t("vendors.aging.title")}
           </CardTitle>
           <CardDescription>{t("vendors.aging.loading_aging_analysis")}</CardDescription>
@@ -331,7 +331,7 @@ export function VendorAgingBalance({ locationIds }: VendorAgingBalanceProps = {}
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center w-full max-w-full overflow-x-hidden">
           <div className="flex-1 min-w-0">
             <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-              <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-orange-600 dark:text-orange-400" />
+              <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 text-primary" />
               <span className="truncate">{t("vendors.aging.title")}</span>
             </CardTitle>
             <CardDescription className="text-xs sm:text-sm">
@@ -370,7 +370,7 @@ export function VendorAgingBalance({ locationIds }: VendorAgingBalanceProps = {}
                 </SelectContent>
               </Select>
             </div>
-            <Badge variant="outline" className="self-start sm:self-auto bg-orange-600 text-white dark:bg-orange-700 border-orange-600 dark:border-orange-700">
+            <Badge variant="outline" className="self-start sm:self-auto bg-primary text-primary-foreground border-primary">
               {totals.vendors_count} {t("vendors.aging.vendors")}
             </Badge>
           </div>
@@ -379,7 +379,7 @@ export function VendorAgingBalance({ locationIds }: VendorAgingBalanceProps = {}
       <CardContent className="space-y-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full max-w-full overflow-x-hidden">
-          <div className="p-3 sm:p-4 rounded-lg w-full max-w-full overflow-x-hidden bg-orange-600 text-white dark:bg-orange-700">
+          <div className="p-3 sm:p-4 rounded-lg w-full max-w-full overflow-x-hidden bg-primary text-primary-foreground">
             <div className="text-lg sm:text-2xl font-bold break-all">{formatCurrency(totals.total_outstanding)}</div>
             <div className="text-xs sm:text-sm opacity-90">{t("vendors.aging.total_outstanding")}</div>
           </div>
@@ -460,7 +460,7 @@ export function VendorAgingBalance({ locationIds }: VendorAgingBalanceProps = {}
         <div className="hidden md:block rounded-md border [&_td]:whitespace-normal [&_th]:whitespace-normal [&_[data-slot='table-container']]:overflow-hidden">
           <Table className="table-fixed">
             <TableHeader>
-              <TableRow className="bg-orange-50 dark:bg-orange-900/40 border-b dark:border-gray-700">
+              <TableRow className="bg-muted/50 border-b dark:border-gray-700">
                 <TableHead className="font-semibold text-foreground whitespace-normal">{t("vendors.aging.vendor_details")}</TableHead>
                 <TableHead className="text-right font-semibold text-foreground whitespace-normal">{t("vendors.aging.total_outstanding")}</TableHead>
                 <TableHead className="text-right font-semibold text-foreground whitespace-normal">{t("vendors.aging.current_0_30")}</TableHead>
@@ -563,21 +563,21 @@ export function VendorAgingBalance({ locationIds }: VendorAgingBalanceProps = {}
         </div>
 
         {/* Aging Insights */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-700">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-accent/10 border border-accent/30">
           <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+            <div className="text-2xl font-bold text-accent">
               {Math.round((totals.over_90 / totals.total_outstanding) * 100)}%
             </div>
             <div className="text-sm text-muted-foreground">Over 90 Days Risk</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+            <div className="text-2xl font-bold text-accent">
               {totals.vendors_count}
             </div>
             <div className="text-sm text-muted-foreground">Active Vendors</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+            <div className="text-2xl font-bold text-accent">
               {Math.round((totals.current_0_30 / totals.total_outstanding) * 100)}%
             </div>
             <div className="text-sm text-muted-foreground">Current Aging</div>

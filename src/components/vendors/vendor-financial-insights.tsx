@@ -189,7 +189,7 @@ export function VendorFinancialInsights({ className }: VendorFinancialInsightsPr
                   </div>
                   <div>
                     <div className="text-muted-foreground">{t("vendors.performance.outstanding")}:</div>
-                    <div className={`font-medium break-all ${(vendor.outstanding_amount || 0) > 50000 ? 'text-red-600' : (vendor.outstanding_amount || 0) > 10000 ? 'text-orange-600' : 'text-green-600'}`}>
+                    <div className={`font-medium break-all ${(vendor.outstanding_amount || 0) > 50000 ? 'text-destructive' : (vendor.outstanding_amount || 0) > 10000 ? 'text-warning' : 'text-green-600'}`}>
                       {vendor.outstanding_amount ? formatCurrency(vendor.outstanding_amount) : 'SAR 0'}
                     </div>
                   </div>
@@ -278,7 +278,7 @@ export function VendorFinancialInsights({ className }: VendorFinancialInsightsPr
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className={`text-sm font-bold ${(vendor.outstanding_amount || 0) > 50000 ? 'text-red-600' : (vendor.outstanding_amount || 0) > 10000 ? 'text-orange-600' : 'text-green-600'}`}>
+                    <div className={`text-sm font-bold ${(vendor.outstanding_amount || 0) > 50000 ? 'text-destructive' : (vendor.outstanding_amount || 0) > 10000 ? 'text-warning' : 'text-green-600'}`}>
                       {vendor.outstanding_amount ? formatCurrency(vendor.outstanding_amount) : 'SAR 0'}
                     </div>
                     <div className="text-xs text-muted-foreground">
@@ -369,7 +369,7 @@ export function VendorFinancialInsights({ className }: VendorFinancialInsightsPr
             </div>
           </div>
           <div className="text-center">
-            <div className="text-lg sm:text-xl font-bold break-all text-orange-600">
+            <div className="text-lg sm:text-xl font-bold break-all text-accent">
               {data.filter(v => (v.cash_conversion_days || 999) <= 30).length}
             </div>
             <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">

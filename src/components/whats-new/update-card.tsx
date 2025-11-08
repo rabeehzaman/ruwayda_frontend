@@ -41,7 +41,7 @@ const categoryConfig: Record<UpdateCategory, {
   },
   breaking: {
     icon: AlertTriangle,
-    colorClass: 'bg-orange-500/10 text-orange-600 border-orange-500/20',
+    colorClass: 'bg-destructive/10 text-destructive border-destructive/20',
     labelEn: 'Breaking Change',
     labelAr: 'تغيير جذري'
   }
