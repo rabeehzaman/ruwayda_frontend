@@ -6,21 +6,17 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
 import { useVendorKPIs } from "@/hooks/use-vendor-kpis"
 import { useLocale } from "@/i18n/locale-provider"
-import { 
-  FileText, 
-  Clock, 
-  AlertTriangle, 
-  Users, 
-  CheckCircle 
+import {
+  FileText,
+  Clock,
+  AlertTriangle,
+  Users,
+  CheckCircle
 } from "lucide-react"
+import { formatCurrency as formatCurrencySAR } from '@/lib/formatting'
 
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'SAR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount).replace('SAR', 'SAR ')
+  return formatCurrencySAR(amount)
 }
 
 const formatPercentage = (percentage: number) => `${percentage.toFixed(1)}%`

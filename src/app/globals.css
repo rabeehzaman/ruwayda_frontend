@@ -37,8 +37,8 @@
   --sidebar-ring: oklch(0.7853 0.1041 274.7134);
   --warning: oklch(0.7000 0.1800 45.0000);
   --warning-foreground: oklch(0 0 0);
-  --font-sans: DM Sans, sans-serif;
-  --font-serif: DM Sans, sans-serif;
+  --font-sans: saudi_riyal, DM Sans, sans-serif;
+  --font-serif: saudi_riyal, DM Sans, sans-serif;
   --font-mono: Space Mono, monospace;
   --radius: 1rem;
   --shadow-2xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.03);
@@ -95,8 +95,8 @@
   --sidebar-ring: oklch(0.6801 0.1583 276.9349);
   --warning: oklch(0.7500 0.1500 50.0000);
   --warning-foreground: oklch(0 0 0);
-  --font-sans: DM Sans, sans-serif;
-  --font-serif: DM Sans, sans-serif;
+  --font-sans: saudi_riyal, DM Sans, sans-serif;
+  --font-serif: saudi_riyal, DM Sans, sans-serif;
   --font-mono: Space Mono, monospace;
   --radius: 1rem;
   --shadow-2xs: 0px 0px 0px 0px hsl(0 0% 10.1961% / 0.03);
@@ -153,9 +153,9 @@
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
 
-  --font-sans: DM Sans, sans-serif;
+  --font-sans: saudi_riyal, DM Sans, sans-serif;
   --font-mono: Space Mono, monospace;
-  --font-serif: DM Sans, sans-serif;
+  --font-serif: saudi_riyal, DM Sans, sans-serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -187,10 +187,37 @@
   --color-shadow-color: var(--shadow-color);
 }
 
+/* Saudi Riyal Symbol Font - Loaded from public folder */
+/* IMPORTANT: unicode-range limits this font to ONLY the Saudi Riyal symbol */
+/* This prevents it from interfering with regular text rendering */
+@font-face {
+  font-family: "saudi_riyal";
+  src: url("/fonts/saudi-riyal/regular/saudi_riyal.woff2") format("woff2"),
+    url("/fonts/saudi-riyal/regular/saudi_riyal.woff") format("woff"),
+    url("/fonts/saudi-riyal/regular/saudi_riyal.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+E900; /* ONLY apply to Saudi Riyal symbol character */
+}
+
+@font-face {
+  font-family: "saudi_riyal";
+  src: url("/fonts/saudi-riyal/bold/saudi_riyal.woff2") format("woff2"),
+    url("/fonts/saudi-riyal/bold/saudi_riyal.woff") format("woff"),
+    url("/fonts/saudi-riyal/bold/saudi_riyal.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+E900; /* ONLY apply to Saudi Riyal symbol character */
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  /* saudi_riyal font has unicode-range: U+E900, so it ONLY applies to that character */
+  /* All other characters will fallback to DM Sans */
+  font-family: "saudi_riyal", var(--font-sans), sans-serif;
 }
 
 /* Theme enhancements */

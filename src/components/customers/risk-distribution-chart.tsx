@@ -7,15 +7,10 @@ import { useRiskCategoryDistribution } from "@/hooks/use-customer-aging-kpis"
 import { useLocale } from "@/i18n/locale-provider"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 import { AlertTriangle, PieChart as PieChartIcon } from "lucide-react"
+import { formatCurrency as formatCurrencySAR } from '@/lib/formatting'
 
 const formatCurrency = (amount: string) => {
-  const numAmount = parseFloat(amount)
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'SAR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(numAmount).replace('SAR', 'SAR ')
+  return formatCurrencySAR(parseFloat(amount))
 }
 
 interface CustomTooltipProps {

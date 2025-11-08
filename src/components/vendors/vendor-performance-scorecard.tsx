@@ -180,7 +180,7 @@ export function VendorPerformanceScorecard({ className }: VendorPerformanceScore
                   <div>
                     <div className="text-muted-foreground">{t("vendors.performance.outstanding")}:</div>
                     <div className="font-medium text-red-600 break-all">
-                      {vendor.outstanding_amount ? `SAR ${Math.round(vendor.outstanding_amount).toLocaleString()}` : t('common.n_a')}
+                      {vendor.outstanding_amount ? formatCurrency(vendor.outstanding_amount) : t('common.n_a')}
                     </div>
                   </div>
                 </div>
@@ -251,7 +251,7 @@ export function VendorPerformanceScorecard({ className }: VendorPerformanceScore
                   </TableCell>
                   <TableCell className="text-right">
                     <span className="text-sm font-medium text-red-600">
-                      {vendor.outstanding_amount ? `SAR ${Math.round(vendor.outstanding_amount).toLocaleString()}` : t('common.n_a')}
+                      {vendor.outstanding_amount ? formatCurrency(vendor.outstanding_amount) : t('common.n_a')}
                     </span>
                   </TableCell>
                   <TableCell className="text-center">
@@ -293,7 +293,7 @@ export function VendorPerformanceScorecard({ className }: VendorPerformanceScore
           </div>
           <div className="text-center">
             <div className="text-xl font-bold text-red-600">
-              SAR {Math.round(data.reduce((sum, v) => sum + (v.outstanding_amount || 0), 0)).toLocaleString()}
+              {formatCurrency(data.reduce((sum, v) => sum + (v.outstanding_amount || 0), 0))}
             </div>
             <div className="text-xs text-muted-foreground">Total Outstanding</div>
           </div>

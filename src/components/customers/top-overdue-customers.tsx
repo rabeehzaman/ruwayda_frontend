@@ -6,20 +6,16 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useTopOverdueCustomers } from "@/hooks/use-customer-aging-kpis"
 import { useLocale } from "@/i18n/locale-provider"
-import { 
-  AlertTriangle, 
-  Clock, 
+import {
+  AlertTriangle,
+  Clock,
   TrendingUp,
   Users
 } from "lucide-react"
+import { formatCurrency as formatCurrencySAR } from '@/lib/formatting'
 
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'SAR',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount).replace('SAR', 'SAR ')
+  return formatCurrencySAR(amount)
 }
 
 const getRiskBadgeVariant = (riskCategory: string) => {

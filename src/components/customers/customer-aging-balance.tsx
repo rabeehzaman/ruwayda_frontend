@@ -15,14 +15,10 @@ import { supabase } from "@/lib/supabase"
 import { CustomerBalanceAging } from "@/types/database"
 import { useLocale } from "@/i18n/locale-provider"
 import { Search } from "lucide-react"
+import { formatCurrency as formatCurrencySAR } from '@/lib/formatting'
 
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'SAR',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount).replace('SAR', 'SAR ')
+  return formatCurrencySAR(amount)
 }
 
 interface CustomerAgingBalanceProps {

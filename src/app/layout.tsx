@@ -67,6 +67,14 @@ export default async function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-TileColor" content="#FAF9F5" />
         <meta name="msapplication-tap-highlight" content="no" />
+        {/* Preload Saudi Riyal font for better performance */}
+        <link
+          rel="preload"
+          href="/fonts/saudi-riyal/regular/saudi_riyal.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `

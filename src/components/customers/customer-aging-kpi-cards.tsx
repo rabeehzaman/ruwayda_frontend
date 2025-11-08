@@ -6,21 +6,16 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
 import { useCustomerAgingSummaryKPIs } from "@/hooks/use-customer-aging-kpis"
 import { useLocale } from "@/i18n/locale-provider"
-import { 
-  DollarSign, 
-  Users, 
-  Clock, 
-  AlertTriangle 
+import {
+  DollarSign,
+  Users,
+  Clock,
+  AlertTriangle
 } from "lucide-react"
+import { formatCurrency as formatCurrencySAR } from '@/lib/formatting'
 
 const formatCurrency = (amount: string) => {
-  const numAmount = parseFloat(amount)
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'SAR',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(numAmount).replace('SAR', 'SAR ')
+  return formatCurrencySAR(parseFloat(amount))
 }
 
 const formatPercentage = (percentage: string) => `${percentage}%`

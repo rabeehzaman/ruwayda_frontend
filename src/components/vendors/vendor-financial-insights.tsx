@@ -25,13 +25,11 @@ import {
   Target
 } from "lucide-react"
 
+// Import formatCurrency from lib for consistent Saudi Riyal symbol usage
+import { formatCurrency as formatCurrencySAR } from '@/lib/formatting'
+
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'SAR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount).replace('SAR', 'SAR ')
+  return formatCurrencySAR(amount)
 }
 
 const getActivityColor = (status: string) => {
@@ -184,13 +182,13 @@ export function VendorFinancialInsights({ className }: VendorFinancialInsightsPr
                   <div>
                     <div className="text-muted-foreground">{t("vendors.financial_insights.ytd_paid")}:</div>
                     <div className="font-medium text-green-600 break-all">
-                      {vendor.total_paid_ytd ? formatCurrency(vendor.total_paid_ytd) : 'SAR 0'}
+                      {vendor.total_paid_ytd ? formatCurrency(vendor.total_paid_ytd) : formatCurrency(0)}
                     </div>
                   </div>
                   <div>
                     <div className="text-muted-foreground">{t("vendors.performance.outstanding")}:</div>
                     <div className={`font-medium break-all ${(vendor.outstanding_amount || 0) > 50000 ? 'text-destructive' : (vendor.outstanding_amount || 0) > 10000 ? 'text-warning' : 'text-green-600'}`}>
-                      {vendor.outstanding_amount ? formatCurrency(vendor.outstanding_amount) : 'SAR 0'}
+                      {vendor.outstanding_amount ? formatCurrency(vendor.outstanding_amount) : formatCurrency(0)}
                     </div>
                   </div>
                   <div>
@@ -271,7 +269,7 @@ export function VendorFinancialInsights({ className }: VendorFinancialInsightsPr
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="text-sm font-semibold text-green-600">
-                      {vendor.total_paid_ytd ? formatCurrency(vendor.total_paid_ytd) : 'SAR 0'}
+                      {vendor.total_paid_ytd ? formatCurrency(vendor.total_paid_ytd) : formatCurrency(0)}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       {vendor.payment_completion_rate ? `${vendor.payment_completion_rate.toFixed(1)}%` : '0%'}
@@ -279,7 +277,7 @@ export function VendorFinancialInsights({ className }: VendorFinancialInsightsPr
                   </TableCell>
                   <TableCell className="text-right">
                     <div className={`text-sm font-bold ${(vendor.outstanding_amount || 0) > 50000 ? 'text-destructive' : (vendor.outstanding_amount || 0) > 10000 ? 'text-warning' : 'text-green-600'}`}>
-                      {vendor.outstanding_amount ? formatCurrency(vendor.outstanding_amount) : 'SAR 0'}
+                      {vendor.outstanding_amount ? formatCurrency(vendor.outstanding_amount) : formatCurrency(0)}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       {vendor.days_since_last_payment ? `${vendor.days_since_last_payment}d ${t("vendors.financial_insights.ago")}` : t("vendors.financial_insights.no_payments")}
@@ -396,7 +394,7 @@ export function VendorFinancialInsights({ className }: VendorFinancialInsightsPr
           </h5>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-700 dark:text-blue-300">
             <div>
-              <strong>High-Value Outstanding:</strong> {data.filter(v => (v.outstanding_amount || 0) > 50000).length} vendors with SAR 50K+ outstanding
+              <strong>High-Value Outstanding:</strong> {data.filter(v => (v.outstanding_amount || 0) > 50000).length} vendors with {formatCurrency(50000)}+ outstanding
             </div>
             <div>
               <strong>Payment Reliability:</strong> {data.filter(v => (v.payment_completion_rate || 0) > 95).length} vendors with 95%+ payment completion

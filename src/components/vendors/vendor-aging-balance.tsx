@@ -23,21 +23,21 @@ import { Input } from "@/components/ui/input"
 import { supabase } from "@/lib/supabase"
 import { useLocale } from "@/i18n/locale-provider"
 import { AlertTriangle, DollarSign, Clock, Target, TrendingUp, Search } from "lucide-react"
+import { formatCurrency as formatCurrencySAR, getCurrencySymbol } from '@/lib/formatting'
 
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'SAR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount).replace('SAR', 'SAR ')
+  return formatCurrencySAR(amount)
 }
 
-// Helper function to parse currency values like "SAR 3,446.21" to numbers
+// Helper function to parse currency values like "⃁ 3,446.21" or "SAR 3,446.21" to numbers
 const parseCurrencyValue = (value: string | null | undefined): number => {
   if (!value) return 0
-  // Remove currency prefix and commas, then parse as float
-  const cleanValue = value.replace(/^SAR\s*/, '').replace(/,/g, '')
+  // Remove currency symbol/prefix and commas, then parse as float
+  const symbol = getCurrencySymbol()
+  const cleanValue = value
+    .replace(new RegExp(`^${symbol}\\s*`), '') // Remove symbol
+    .replace(/^SAR\s*/, '') // Legacy SAR support
+    .replace(/,/g, '') // Remove commas
   const parsed = parseFloat(cleanValue)
   return isNaN(parsed) ? 0 : parsed
 }

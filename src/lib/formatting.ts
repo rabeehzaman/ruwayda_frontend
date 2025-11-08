@@ -5,37 +5,24 @@ import { ar } from 'date-fns/locale'
 // Saudi Arabia timezone
 const SAUDI_TIMEZONE = 'Asia/Riyadh'
 
-// Test Saudi Riyal symbol implementation
-const SAUDI_RIYAL_SYMBOL = '﷼' // Official Saudi Riyal symbol
+// Official Saudi Riyal symbol
+// Using U+E900 (legacy private-use) for better font compatibility
+// The @emran-alhaddad/saudi-riyal-font package supports both U+E900 and U+20C1
+// U+E900 is more reliable for current font rendering
+const SAUDI_RIYAL_SYMBOL = '\uE900' // Saudi Riyal symbol (private-use Unicode)
 const FALLBACK_SYMBOL = '' // No symbol fallback
 
-// Function to test if Saudi Riyal symbol is supported
-function testSaudiRiyalSupport(): boolean {
-  try {
-    // Test if the symbol renders properly
-    const testElement = document.createElement('div')
-    testElement.innerHTML = SAUDI_RIYAL_SYMBOL
-    return testElement.textContent === SAUDI_RIYAL_SYMBOL
-  } catch {
-    return false
-  }
-}
-
-// Get currency symbol based on support
+// Get currency symbol
 export function getCurrencySymbol(): string {
-  // For now, let's try the Saudi Riyal symbol
-  // If it doesn't work well, we'll use no symbol
-  try {
-    return SAUDI_RIYAL_SYMBOL
-  } catch {
-    return FALLBACK_SYMBOL
-  }
+  return SAUDI_RIYAL_SYMBOL
 }
 
 /**
  * Format currency with full numbers (no compact notation like 10K)
- * Tests Saudi Riyal symbol, falls back to no symbol if needed
+ * Uses official Saudi Riyal symbol (U+E900 private-use Unicode)
  * Uses English numbers and Western formatting - FOR KPIs ONLY
+ * Symbol positioned left of numerals with space (per SAMA guidelines)
+ * NOTE: Returns plain text - for React components, use a wrapper with saudi-riyal-symbol class
  */
 export function formatCurrency(value: number): string {
   const symbol = getCurrencySymbol()
@@ -43,9 +30,26 @@ export function formatCurrency(value: number): string {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   })
-  
-  // If we have a symbol, add it. Otherwise just return the number
-  return symbol ? `${symbol}${formattedNumber}` : formattedNumber
+
+  // Add space between symbol and number (per SAMA official guidelines)
+  return symbol ? `${symbol} ${formattedNumber}` : formattedNumber
+}
+
+/**
+ * Format currency and return HTML string with proper font styling
+ * Use this for rendering in React components with dangerouslySetInnerHTML
+ */
+export function formatCurrencyHTML(value: number): string {
+  const symbol = getCurrencySymbol()
+  const formattedNumber = value.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  })
+
+  if (!symbol) return formattedNumber
+
+  // Wrap symbol in span with saudi-riyal-symbol class to apply the font
+  return `<span class="saudi-riyal-symbol">${symbol}</span> ${formattedNumber}`
 }
 
 /**
@@ -159,19 +163,22 @@ export function parseDate(dateString: string): Date {
 
 /**
  * Test function to verify Saudi Riyal symbol rendering
+ * Checks if the Unicode U+E900 symbol is being used
  */
 export function testCurrencyFormatting(): {
   saudiRiyalSupported: boolean
   testFormat: string
   symbol: string
+  unicodePoint: string
 } {
   const symbol = getCurrencySymbol()
   const testValue = 1234567.89
   const testFormat = formatCurrency(testValue)
-  
+
   return {
     saudiRiyalSupported: symbol === SAUDI_RIYAL_SYMBOL,
     testFormat,
-    symbol
+    symbol,
+    unicodePoint: 'U+E900'
   }
 }

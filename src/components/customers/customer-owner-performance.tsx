@@ -7,21 +7,17 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useCustomerAgingData } from "@/hooks/use-customer-aging-kpis"
 import { useLocale } from "@/i18n/locale-provider"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { 
-  Users, 
+import {
+  Users,
   AlertTriangle,
   TrendingUp,
   TrendingDown,
   Crown
 } from "lucide-react"
+import { formatCurrency as formatCurrencySAR } from '@/lib/formatting'
 
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'SAR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount).replace('SAR', 'SAR ')
+  return formatCurrencySAR(amount)
 }
 
 interface CustomerOwnerData {
