@@ -7,8 +7,6 @@ import { DynamicThemeColor } from "@/components/dynamic-theme-color";
 import { LocaleProvider } from "@/i18n/locale-provider";
 import { AuthProvider } from "@/contexts/auth-context";
 import { CustomerOwnerFilterProvider } from "@/contexts/customer-owner-filter-context";
-import { SessionMonitor } from "@/components/session-monitor";
-import { Toaster } from "sonner";
 import { headers } from 'next/headers';
 import { getLangDir } from 'rtl-detect';
 
@@ -109,8 +107,6 @@ export default async function RootLayout({
                 enableSystem
               >
                 <DynamicThemeColor />
-                <SessionMonitor />
-                <Toaster position="top-right" richColors closeButton />
                 {children}
                 <PWAInstallPrompt />
               </ThemeProvider>
