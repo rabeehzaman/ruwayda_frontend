@@ -1,0 +1,389 @@
+================================================================================
+DASHBOARD CODEBASE ANALYSIS - COMPLETE FINDINGS
+================================================================================
+
+ANALYSIS DATE: 2025-11-10
+FOCUS: Data Fetching & State Management Architecture
+PURPOSE: Identify why filters hang after idle periods
+
+================================================================================
+1. KEY FINDINGS
+================================================================================
+
+SUPABASE CLIENT
+  Location: /src/lib/supabase.ts
+  Type: Browser-based SSR client (singleton)
+  Issues: No custom timeouts, no retry policy, no connection management
+  
+REACT QUERY STATUS
+  Package: "@tanstack/react-query": "^5.90.6" (INSTALLED BUT UNUSED)
+  Provider: No QueryClientProvider in app
+  Hooks: No useQuery() hooks anywhere
+  Impact: Zero benefit from installed dependency
+
+CUSTOM HOOKS ARCHITECTURE
+  Location: /src/hooks/use-optimized-data.ts
+  Pattern: Custom React hooks with direct Supabase calls
+  Features: 300ms debounce, AbortController for cancellation
+  Missing: No caching, no retry logic, no stale data handling
+
+DATA FETCHING FLOW
+  User Action (Filter Change)
+      → 300ms Debounce
+      → Custom Hook (useOptimized*)
+      → Direct Supabase RPC Call
+      → Local Component State (No Cache)
+      → UI Update
+  
+  NOTE: No caching between components, no query coordination
+
+================================================================================
+2. ROOT CAUSES OF HANGING FILTERS
+================================================================================
+
+PRIMARY CAUSE: No Idle Detection + Session Expiration
+  1. User goes idle for 5+ minutes (session expires server-side)
+  2. App doesn't detect session expiration (no validation)
+  3. User returns and changes filter
+  4. Request sent with expired token
+  5. Supabase returns 401 Unauthorized (silently)
+  6. Error handler shows nothing to user
+  7. UI appears to hang (loading state, no data, no error)
+
+CONTRIBUTING CAUSES:
+  
+  2. No Visibility Change Detection
+     - document.visibilitychange NOT implemented
+     - Tab can be backgrounded for hours
+     - App doesn't know to validate session on return
+     
+  3. No Window Focus/Blur Handlers
+     - window.focus/blur NOT implemented
+     - No refresh when window regains focus
+     - No pause when window loses focus
+     
+  4. No Idle Activity Timer
+     - No tracking of user mousemove/keypress
+     - No timeout after 5-10 minutes idle
+     - Session can expire without user knowledge
+     
+  5. No Network Reconnection Logic
+     - /src/hooks/use-pwa.ts only updates UI badge
+     - No automatic refetch on 'online' event
+     - No session validation after network restore
+     
+  6. No Request Timeout
+     - Supabase calls can hang indefinitely
+     - No Promise.race() with timeout
+     - Especially problematic when tab is backgrounded
+     
+  7. Poor Error Handling & Display
+     - Errors only logged to console
+     - No user-facing error messages
+     - No distinction between error types (timeout vs auth)
+     - No automatic retry mechanism
+
+================================================================================
+3. DETAILED LOCATIONS
+================================================================================
+
+Supabase Configuration:
+  File: /src/lib/supabase.ts
+  Line: 1-6
+  Status: Minimal, no custom options
+
+Auth Context:
+  File: /src/contexts/auth-context.tsx
+  Lines: 67-94 (useEffect with auth listener)
+  Issue: Only runs on initial mount, no refresh triggers
+
+KPI Hooks:
+  File: /src/hooks/use-optimized-data.ts
+  Lines: 35-133 (useOptimizedKPIs)
+  Lines: 317-470 (useOptimizedProfitByInvoice)
+  Features: Debounce, AbortController
+  Missing: Timeout, retry, cache, stale data
+
+PWA Hooks:
+  File: /src/hooks/use-pwa.ts
+  Lines: 20-29 (online/offline listeners)
+  Issue: Only updates UI badge, no data refresh
+
+Dashboard Page:
+  File: /src/app/page.tsx
+  No idle detection, no visibility handlers
+  No React Query Provider
+
+Root Layout:
+  File: /src/app/layout.tsx
+  No AuthProvider-level idle handlers
+  No root-level visibility listeners
+
+Package Configuration:
+  File: package.json
+  Line: 27 - React Query installed but unused
+  
+Service Worker:
+  File: /public/swe-worker-5c72df51bb1f6ee0.js
+  Type: Minified Next.js SWE
+  Features: Asset caching only, no API caching
+
+================================================================================
+4. WHAT EXISTS vs WHAT'S MISSING
+================================================================================
+
+IMPLEMENTED:
+  ✓ Supabase browser client
+  ✓ Auth context with onAuthStateChange listener
+  ✓ Custom data fetching hooks
+  ✓ 300ms debounce on filter changes
+  ✓ AbortController for request cancellation
+  ✓ Online/offline status badge
+  ✓ PWA manifest and Service Worker
+  ✓ RPC function fallback logic
+  ✓ Basic error states in components
+
+NOT IMPLEMENTED:
+  ✗ Request timeout (Promise.race)
+  ✗ Visibility change handler (document.visibilitychange)
+  ✗ Window focus/blur handlers (window.focus/blur)
+  ✗ Idle activity detection (mousemove/keypress tracking)
+  ✗ Session validation before filter changes
+  ✗ Automatic refresh on visibility change
+  ✗ Automatic refresh on window focus
+  ✗ Automatic refresh on network reconnection
+  ✗ React Query implementation (despite being installed)
+  ✗ Retry logic with exponential backoff
+  ✗ Stale time / cache time configuration
+  ✗ Query cache coordination between components
+  ✗ User-facing error notifications (toast/alert)
+  ✗ Idle timeout warning/logout
+  ✗ Background data polling
+
+================================================================================
+5. THE HANGING FILTERS SCENARIO
+================================================================================
+
+TIMELINE:
+
+9:00 AM - User opens dashboard
+  → Session valid (JWT token fresh)
+  → All filters work normally
+
+9:05 AM - User steps away (page stays open)
+  → Supabase JWT token set to expire in 5 minutes (typical default)
+  → App continues running, but user is idle
+  → No idle detection in place
+  → No activity tracking
+
+9:10 AM - User returns and changes date filter
+  → Filter change detected
+  → 300ms debounce begins
+  → Custom hook prepares to fetch data
+  → At 9:10:00.3 AM, API request is sent
+  → Token is now EXPIRED (would expire at 9:10 AM)
+
+9:10 AM - Supabase rejects request (401 Unauthorized)
+  → Error callback triggered in database-optimized.ts
+  → error.message logged to console only
+  → Function returns null
+
+9:10 AM - Hook error handler executes
+  → Checks if result is falsy → true
+  → Calls setError('Failed to load KPIs')
+  → Calls setLoading(false)
+  → BUT: Error message might not display to user
+
+9:10 AM - User sees:
+  → Brief loading spinner
+  → Then loading disappears
+  → No data updates
+  → No error message visible
+  → Appears to hang (UI unresponsive to action)
+
+9:10+ AM - User frustration
+  → Tries changing filter again → same result
+  → Tries refreshing page → works (new session)
+  → Confused about what went wrong
+
+ROOT CAUSE: No session validation when resuming from idle
+CONTRIBUTING: No error display, no automatic retry, no idle detection
+
+================================================================================
+6. TECHNICAL ROOT CAUSE EXPLANATION
+================================================================================
+
+The application has:
+  1. Session management via Supabase auth context
+  2. JWT token auto-refresh at Supabase SDK level
+  3. Data fetching hooks triggered by filter changes
+  4. Error handling that silently fails
+
+The application LACKS:
+  1. Visibility change detection to know when session might have expired
+  2. Focus/blur handlers to trigger validation
+  3. Idle timer to warn user or refresh session
+  4. Session validation BEFORE making requests
+  5. Request timeout to prevent indefinite hangs
+  6. Automatic retry on failure
+  7. User-facing error notifications
+  8. Idle logout mechanism
+
+When a user goes idle:
+  → Session expires (5-10 minute default)
+  → User doesn't know (no notification)
+  → User makes a request
+  → Request fails with auth error
+  → Error is silent
+  → User sees hanging UI
+
+If the app had React Query (already installed):
+  → Could configure refetchOnWindowFocus: true
+  → Could add retry logic
+  → Could show error states
+  → Could cache previous results
+
+If the app had idle detection:
+  → Could warn user before session expires
+  → Could refresh session on user activity
+  → Could validate before filter changes
+
+If the app had visibility change handlers:
+  → Could refresh data when tab returns to focus
+  → Could validate session on visibility change
+  → Could pause data fetching when hidden
+
+================================================================================
+7. IMMEDIATE FIXES (Priority Order)
+================================================================================
+
+1. Add Request Timeout Wrapper (30 minutes)
+   File: /src/lib/utils.ts (new function)
+   Impact: Prevents hanging requests
+   Code:
+     function withTimeout<T>(promise: Promise<T>, ms = 10000) {
+       return Promise.race([
+         promise,
+         new Promise<T>((_, reject) =>
+           setTimeout(() => reject(new Error('Request timeout')), ms)
+         )
+       ])
+     }
+
+2. Add Visibility Change Handler (30 minutes)
+   File: /src/hooks/use-visibility.ts (new file)
+   Impact: Validates session when tab returns
+   Triggers: Auto-refresh data on tab return
+
+3. Add Idle Detection Hook (45 minutes)
+   File: /src/hooks/use-idle-timer.ts (new file)
+   Impact: Detects when user goes idle
+   Triggers: Session validation, warning message
+
+4. Update PWA Online Handler (15 minutes)
+   File: /src/hooks/use-pwa.ts (modify existing)
+   Impact: Refetch data when connection restored
+   Triggers: Automatic refresh on reconnect
+
+5. Add Session Validation (30 minutes)
+   File: /src/contexts/auth-context.tsx (enhance)
+   Impact: Checks token validity before requests
+   Triggers: Re-auth if needed
+
+Total Effort: ~3 hours to implement basic safeguards
+
+================================================================================
+8. MEDIUM-TERM FIXES (React Query Implementation)
+================================================================================
+
+1. Create QueryClient with proper config (30 min)
+   - staleTime: 5 minutes
+   - gcTime: 10 minutes
+   - retry: 2
+   - retryDelay: exponential backoff
+   - refetchOnWindowFocus: true
+   - refetchOnReconnect: true
+
+2. Replace custom hooks with useQuery (2-4 hours)
+   - Migrate useOptimizedKPIs → useQuery
+   - Migrate useOptimizedProfitByInvoice → useQuery
+   - Migrate other data hooks
+
+3. Add error boundary with toast notifications (1 hour)
+   - Display errors to user
+   - Allow manual retry
+   - Show error details
+
+4. Add request interceptor for timeout (30 min)
+   - Wrap all Supabase calls
+   - Apply timeout globally
+
+Total Effort: ~5-7 hours
+Impact: Comprehensive solution for data fetching issues
+
+================================================================================
+9. DOCUMENTATION FILES CREATED
+================================================================================
+
+Three detailed analysis files have been created:
+
+1. ARCHITECTURE_ANALYSIS.md (detailed, comprehensive)
+   - Full breakdown of all systems
+   - Code examples from actual codebase
+   - Recommendations with code samples
+   - Dependency summary table
+
+2. HANGING_FILTERS_ROOT_CAUSE.md (focused, sequential)
+   - Seven specific root causes
+   - Current vs missing implementations
+   - Sequential event flow
+   - Why React Query isn't helping
+   
+3. This file (ANALYSIS_SUMMARY.txt)
+   - Quick reference
+   - Key findings
+   - Timeline scenario
+   - Priority fixes
+
+================================================================================
+10. CONCLUSION
+================================================================================
+
+The dashboard's filter hanging issue is caused by the combination of:
+
+1. IDLE SESSION EXPIRATION
+   - No detection when user steps away
+   - No warning before session expires
+   - Session expires silently
+
+2. NO DATA VALIDATION ON RETURN
+   - No refresh when page returns to focus
+   - No refresh when window gains focus
+   - No refresh when network is restored
+
+3. SILENT ERROR HANDLING
+   - Auth errors not displayed to user
+   - Generic "Failed to load" message
+   - No distinction between error types
+
+4. WASTED DEPENDENCY
+   - React Query installed but unused
+   - Would solve many issues if configured
+   - Current implementation doesn't benefit
+
+5. ARCHITECTURAL LIMITATION
+   - Custom hooks work but lack advanced features
+   - No coordination between components
+   - Each component manages its own state
+   - No cache awareness
+
+RECOMMENDED PATH FORWARD:
+1. Implement immediate fixes (idle detection, visibility handler, timeout)
+2. Migrate to React Query for robust data management
+3. Add comprehensive error handling and user feedback
+4. Monitor session validity proactively
+
+These changes will eliminate hanging filters and provide a more resilient,
+user-friendly application experience.
+
+================================================================================

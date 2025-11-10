@@ -27,6 +27,9 @@ import {
   type InvoiceItem
 } from '@/lib/database-optimized'
 import type { DateRange } from '@/components/dashboard/date-filter'
+import { withTimeout, RequestTimeoutError } from '@/lib/request-timeout'
+import { validateSession } from '@/lib/session-manager'
+import { showErrorToast, isSessionExpiredError } from '@/lib/error-handler'
 
 // =============================================================================
 // OPTIMIZED KPI HOOK
@@ -66,13 +69,29 @@ export function useOptimizedKPIs(dateRange?: DateRange, locationIds?: string[]) 
         setLoading(true)
         setError(null)
 
+        // Validate session before making request
+        const sessionCheck = await validateSession()
+        if (!sessionCheck.valid) {
+          console.warn('Session validation failed:', sessionCheck.status)
+          if (sessionCheck.status === 'expired') {
+            showErrorToast({ status: 401, message: 'Session expired' }, 'Session Expired')
+          }
+          setError('Session validation failed')
+          setLoading(false)
+          return
+        }
+
         const startDate = dateRange?.from ? formatDateForRPC(dateRange.from) : undefined
         const endDate = dateRange?.to ? formatDateForRPC(dateRange.to) : undefined
 
         // Pass location array directly to database - NO client-side filtering
         console.log('🚀 Loading optimized KPIs with database filtering:', { startDate, endDate, locationIds })
 
-        const result = await getOptimizedKPIs(startDate, endDate, locationIds)
+        // Wrap request with timeout (30 seconds)
+        const result = await withTimeout(
+          getOptimizedKPIs(startDate, endDate, locationIds),
+          30000
+        )
 
         // Check if aborted after async operation
         if (signal.aborted) return
@@ -100,7 +119,9 @@ export function useOptimizedKPIs(dateRange?: DateRange, locationIds?: string[]) 
           setKpis(camelCaseKpis)
           console.log('✅ KPIs loaded successfully')
         } else {
-          setError('Failed to load KPIs')
+          const errorMsg = 'Failed to load KPIs'
+          setError(errorMsg)
+          showErrorToast({ message: errorMsg }, 'Data Load Failed')
           console.error('❌ KPIs loading failed')
         }
       } catch (err) {
@@ -108,7 +129,19 @@ export function useOptimizedKPIs(dateRange?: DateRange, locationIds?: string[]) 
         if (signal.aborted) return
 
         console.error('❌ Error loading KPIs:', err)
-        setError('Failed to load KPIs')
+
+        // Handle specific error types
+        if (err instanceof RequestTimeoutError) {
+          const errorMsg = 'Request timed out'
+          setError(errorMsg)
+          showErrorToast(err, 'Request Timeout')
+        } else if (isSessionExpiredError(err)) {
+          setError('Session expired')
+          showErrorToast(err, 'Session Expired')
+        } else {
+          setError('Failed to load KPIs')
+          showErrorToast(err, 'Failed to load KPIs')
+        }
         setKpis(null)
       } finally {
         // Don't update state if request was aborted
