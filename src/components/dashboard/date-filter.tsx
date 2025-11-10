@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { MonthBadges } from "@/components/dashboard/month-badges"
 
 export type DateRange = {
   from: Date
@@ -141,6 +142,12 @@ export function DateFilter({ onDateRangeChange, className }: DateFilterProps) {
     }
   }
 
+  const handleMonthBadgeSelect = (range: DateRange) => {
+    // When a month badge is clicked, set it as a custom range
+    setCustomDateRange(range)
+    setSelectedPreset("custom")
+  }
+
   const getDisplayText = () => {
     if (selectedPreset === "custom" && customDateRange) {
       return `${format(customDateRange.from, "MMM d, yyyy")} - ${format(customDateRange.to, "MMM d, yyyy")}`
@@ -173,55 +180,63 @@ export function DateFilter({ onDateRangeChange, className }: DateFilterProps) {
   }
 
   return (
-    <div className={cn("flex flex-col sm:flex-row sm:items-center gap-2", className)}>
-      <Select value={selectedPreset} onValueChange={handlePresetChange}>
-        <SelectTrigger className="w-full sm:w-[180px] min-h-[44px] hover:border-primary focus:ring-primary focus:border-primary">
-          <CalendarIcon className="h-4 w-4 mr-2 shrink-0" />
-          <span className="truncate block sm:hidden">{getMobileDisplayText()}</span>
-          <span className="truncate hidden sm:block">{getDisplayText()}</span>
-        </SelectTrigger>
-        <SelectContent>
-          {datePresets.map((preset) => (
-            <SelectItem key={preset.value} value={preset.value}>
-              {preset.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <div className={cn("flex flex-col gap-3", className)}>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+        <Select value={selectedPreset} onValueChange={handlePresetChange}>
+          <SelectTrigger className="w-full sm:w-[180px] min-h-[44px] hover:border-primary focus:ring-primary focus:border-primary">
+            <CalendarIcon className="h-4 w-4 mr-2 shrink-0" />
+            <span className="truncate block sm:hidden">{getMobileDisplayText()}</span>
+            <span className="truncate hidden sm:block">{getDisplayText()}</span>
+          </SelectTrigger>
+          <SelectContent>
+            {datePresets.map((preset) => (
+              <SelectItem key={preset.value} value={preset.value}>
+                {preset.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-      {selectedPreset === "custom" && (
-        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full sm:w-[280px] min-h-[44px] justify-start text-left font-normal",
-                !customDateRange && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {customDateRange ? (
-                `${format(customDateRange.from, "MMM d, yyyy")} - ${format(customDateRange.to, "MMM d, yyyy")}`
-              ) : (
-                t("filters.date_range")
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="range"
-              defaultMonth={customDateRange?.from}
-              selected={customDateRange ? { from: customDateRange.from, to: customDateRange.to } : undefined}
-              onSelect={handleCustomDateSelect}
-              numberOfMonths={1}
-            />
-          </PopoverContent>
-        </Popover>
-      )}
+        {selectedPreset === "custom" && (
+          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full sm:w-[280px] min-h-[44px] justify-start text-left font-normal",
+                  !customDateRange && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {customDateRange ? (
+                  `${format(customDateRange.from, "MMM d, yyyy")} - ${format(customDateRange.to, "MMM d, yyyy")}`
+                ) : (
+                  t("filters.date_range")
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="range"
+                defaultMonth={customDateRange?.from}
+                selected={customDateRange ? { from: customDateRange.from, to: customDateRange.to } : undefined}
+                onSelect={handleCustomDateSelect}
+                numberOfMonths={1}
+              />
+            </PopoverContent>
+          </Popover>
+        )}
 
-      <div className="hidden sm:block text-sm text-muted-foreground">
-        {getDisplayText()}
+        <div className="hidden sm:block text-sm text-muted-foreground">
+          {getDisplayText()}
+        </div>
       </div>
+
+      <MonthBadges
+        onMonthSelect={handleMonthBadgeSelect}
+        selectedRange={customDateRange}
+        monthCount={6}
+      />
     </div>
   )
 }

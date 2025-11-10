@@ -17,6 +17,7 @@ import { ENTITY_TYPE_LABELS, ENTITY_TYPE_TRANSLATION_KEYS } from '@/types/cash';
 import { useCashAccounts } from '@/hooks/use-cash-transactions';
 import { supabase } from '@/lib/supabase';
 import { useLocale } from '@/i18n/locale-provider';
+import { MonthBadgesString, type MonthBadgeRangeString } from '@/components/dashboard/month-badges';
 
 interface CashFiltersProps {
   filters: CashFilters;
@@ -64,6 +65,24 @@ export function CashFiltersComponent({ filters, onFiltersChange }: CashFiltersPr
     onFiltersChange({});
   };
 
+  const handleMonthBadgeSelect = (range: MonthBadgeRangeString) => {
+    onFiltersChange({
+      ...filters,
+      startDate: range.from,
+      endDate: range.to
+    });
+  };
+
+  const getCurrentDateRange = (): MonthBadgeRangeString | undefined => {
+    if (filters.startDate && filters.endDate) {
+      return {
+        from: filters.startDate,
+        to: filters.endDate
+      };
+    }
+    return undefined;
+  };
+
   const hasActiveFilters =
     filters.startDate ||
     filters.endDate ||
@@ -85,6 +104,15 @@ export function CashFiltersComponent({ filters, onFiltersChange }: CashFiltersPr
             {t("pages.cash.filters.clear_filters")}
           </Button>
         )}
+      </div>
+
+      {/* Month Badges for Quick Selection */}
+      <div className="pb-2">
+        <MonthBadgesString
+          onMonthSelect={handleMonthBadgeSelect}
+          selectedRange={getCurrentDateRange()}
+          monthCount={6}
+        />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
